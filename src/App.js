@@ -31,7 +31,7 @@ class App extends Component {
     else { selectedKey = 'selectedB'; }
     const selected = this.state[selectedKey];
     if (selected[word]) {
-      selected[word] = false;
+      delete selected[word];
     }
     else {
       selected[word] = true;
