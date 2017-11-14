@@ -31,7 +31,6 @@ const WordButton = styled.button`
 `;
 
 function WordList(props) {
-    console.log(props);
     return (
         <Wrapper>
             {props.words.map(word => (
@@ -48,7 +47,6 @@ function WordList(props) {
 }
 
 const mapStateToProps = (state, props) => {
-    console.log(state, props);
     if (props.id === 'A') {
         return {
             words: state.wordlistA,

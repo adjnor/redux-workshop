@@ -15,13 +15,13 @@ export default function reducer(state = initialState, action) {
         case TOGGLE_SELECTED_WORD: {
             if (action.payload.id === 'A') {
                 let selected = { ...state.selectedA };
-                if (state.selectedA[action.payload.word]) selected[action.payload.word] = false;
+                if (state.selectedA[action.payload.word]) delete selected[action.payload.word];
                 else { selected[action.payload.word] = true; }
                 return { ...state, selectedA: selected };
             }
             else {
                 let selected = { ...state.selectedB };
-                if (state.selectedB[action.payload.word]) selected[action.payload.word] = false;
+                if (state.selectedB[action.payload.word]) delete selected[action.payload.word];
                 else { selected[action.payload.word] = true; }
                 return { ...state, selectedB: selected };
             }
