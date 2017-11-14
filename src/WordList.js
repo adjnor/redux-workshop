@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { toggleSelectedWord } from './actions';
 
 const Wrapper = styled.div`
     width: 40%;
@@ -28,25 +30,41 @@ const WordButton = styled.button`
     }
 `;
 
-class WordList extends Component {
-    handleClick = (word) => {
-        this.props.toggleSelect(word, this.props.id);
+function WordList(props) {
+    console.log(props);
+    return (
+        <Wrapper>
+            {props.words.map(word => (
+                <WordButton
+                    key={word}
+                    selected={props.selected[word]}
+                    onClick={() => props.doToggleSelectedWord(word, props.id)}
+                >
+                    {word}
+                </WordButton>
+            ))}
+        </Wrapper>
+    );
+}
+
+const mapStateToProps = (state, props) => {
+    console.log(state, props);
+    if (props.id === 'A') {
+        return {
+            words: state.wordlistA,
+            selected: state.selectedA
+        }
     }
-    render() {
-        return (
-            <Wrapper>
-                {this.props.words.map(word => (
-                    <WordButton
-                        key={word}
-                        selected={this.props.selected[word]}
-                        onClick={() => this.handleClick(word)}
-                    >
-                        {word}
-                    </WordButton>
-                ))}
-            </Wrapper>
-        );
+    else {
+        return {
+            words: state.wordlistB,
+            selected: state.selectedB
+        }
     }
 }
 
-export default WordList;
+const mapDispatchToProps = (dispatch) => ({
+    doToggleSelectedWord: (word, id) => dispatch(toggleSelectedWord(word, id)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(WordList);
