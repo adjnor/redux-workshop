@@ -7,6 +7,7 @@ const Wrapper = styled.div`
     margin-top: 50px;
     border: 1px solid orange;
     text-align: left;
+    min-height: 200px;
 `;
 
 const WordButton = styled.button`
@@ -27,38 +28,17 @@ const WordButton = styled.button`
     }
 `;
 
-const words = ['cat', 'bob', 'bird', 'average', 'movie', 'frenchman', 'baguette'];
-
 class WordList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { words, selected: {} };
-    }
     handleClick = (word) => {
-        let selected = this.state.selected;
-        if (selected[word]) {
-            selected[word] = false;
-            this.props.removeTransitWords(word, this.props.id);
-        }
-        else {
-            selected[word] = true;
-            this.props.addTransitWords(word, this.props.id);
-        }
-        this.setState({ selected });
-    }
-    componentWillReceiveProps(nextProps) {
-        // this.props.clearTransitWords();
-        this.setState({ words: this.state.words.concat(nextProps.transitWords.map(e => e.word)) });
+        this.props.toggleSelect(word, this.props.id);
     }
     render() {
-        console.log(`Wordlist ${this.props.id}`, this.state);
-        const allWords = [...this.state.words, ...(this.props.transitWords.filter(e => e.id === this.props.id).map(w => w.word))];
         return (
             <Wrapper>
-                {allWords.map(word => (
+                {this.props.words.map(word => (
                     <WordButton
                         key={word}
-                        selected={this.state.selected[word]}
+                        selected={this.props.selected[word]}
                         onClick={() => this.handleClick(word)}
                     >
                         {word}

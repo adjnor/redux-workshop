@@ -18,29 +18,51 @@ const ArrowButton = styled.button`
 class App extends Component {
   constructor() {
     super();
-    this.state = { transitWords: [] };
+    this.state = {
+      wordlistA: ['cat', 'bob', 'bird', 'average', 'movie', 'frenchman', 'baguette'],
+      wordlistB: [],
+      selectedA: {},
+      selectedB: {}
+    };
   }
-  addTransitWords = (word, id) => {
-    this.setState({ transitWords: this.state.transitWords.concat({ word, id }) });
+  toggleSelect = (word, id) => {
+    let selectedKey;
+    if (id === 'A') selectedKey = 'selectedA';
+    else { selectedKey = 'selectedB'; }
+    const selected = this.state[selectedKey];
+    if (selected[word]) {
+      selected[word] = false;
+    }
+    else {
+      selected[word] = true;
+    }
+    this.setState({ [selectedKey]: selected });
   }
-  removeTransitWords = (word, id) => {
-    const filteredWords = this.state.transitWords.filter(e => e.word !== word && e.id !== id);
-    console.log(this.state.transitWords, word, filteredWords);
-    this.setState({ transitWords: filteredWords });
-  }
-  clearTransitWords = () => {
-    this.setState({ transitWords: [] });
+  moveWords = (direction) => {
+    if (direction === 'forward') {
+      this.setState({
+        wordlistA: this.state.wordlistA.filter(word => !this.state.selectedA[word]),
+        wordlistB: this.state.wordlistB.concat(Object.keys(this.state.selectedA)),
+        selectedA: {},
+      });
+    } else {
+      this.setState({
+        wordlistB: this.state.wordlistB.filter(word => !this.state.selectedB[word]),
+        wordlistA: this.state.wordlistA.concat(Object.keys(this.state.selectedB)),
+        selectedB: {},
+      });
+    }
   }
   render() {
     console.log(this.state);
     return (
       <Wrapper>
-        <WordList transitWords={this.state.transitWords} addTransitWords={this.addTransitWords} removeTransitWords={this.removeTransitWords} clearTransitWords={this.clearTransitWords} id="a" />
+        <WordList words={this.state.wordlistA} selected={this.state.selectedA} toggleSelect={this.toggleSelect} id="A" />
         <div>
-          <ArrowButton onClick={() => this.setState({ transitWords: this.state.transitWords.map(e => ({ word: e.word, id: 'b' })) })}>&gt;</ArrowButton>
-          <ArrowButton onClick={() => this.setState({ transitWords: this.state.transitWords.map(e => ({ word: e.word, id: 'a' })) })}>&lt;</ArrowButton>
+          <ArrowButton onClick={() => this.moveWords('forward')}>&gt;</ArrowButton>
+          <ArrowButton onClick={() => this.moveWords('back')}>&lt;</ArrowButton>
         </div>
-        <WordList transitWords={this.state.transitWords} addTransitWords={this.addTransitWords} removeTransitWords={this.removeTransitWords} clearTransitWords={this.clearTransitWords} id="b" />
+        <WordList words={this.state.wordlistB} selected={this.state.selectedB} toggleSelect={this.toggleSelect} id="B" />
       </Wrapper>
     );
   }
